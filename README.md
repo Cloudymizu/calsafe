@@ -2,8 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-To run the branch locally on localhost:3000, create an .env.local file and put this inside the file. NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
-The deployed version from github will be on calsafe.vercel.app
+To run the branch locally on localhost:3000, create an .env.local file and put this inside the file. NEXT_PUBLIC_API_BASE_URL=http://localhost:8000 The deployed version from github will be on calsafe.vercel.app
 
 First, run the development server:
 
@@ -31,6 +30,3 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-
-

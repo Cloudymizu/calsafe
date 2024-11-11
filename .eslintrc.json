@@ -17,5 +17,6 @@
         "tailwindcss/classnames-order": "off"
       }
     }
-  ]
+  ],
+  "ignorePatterns": ["components/ui/*"]
 }

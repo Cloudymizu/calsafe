@@ -282,14 +282,14 @@ const citiesImperial = [
 ];
 
 interface CrashStatistics {
-    total_crashes: number;
-    total_injuries: number | null;
-    total_fatalities: number | null;
-    pedestrian_accidents: number;
-    bicycle_accidents: number;
-    motorcycle_accidents: number;
-    truck_accidents: number;
-    alcohol_related: number;
+	total_crashes: number;
+	total_injuries: number | null;
+	total_fatalities: number | null;
+	pedestrian_accidents: number;
+	bicycle_accidents: number;
+	motorcycle_accidents: number;
+	truck_accidents: number;
+	alcohol_related: number;
 }
 
 // Helper functions to generate year, month, and day options
@@ -355,36 +355,36 @@ const StatisticsPage = () => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setError(""); // Reset error
-	
+
 		const startDate = buildDate(startYear, startMonth, startDay);
 		const endDate = buildDate(endYear, endMonth, endDay);
-	
+
 		// Construct the base query URL
 		let queryUrl = `${API_BASE_URL}/api/statistics/?start_date=${startDate}&end_date=${endDate}&county=${county}`;
 		if (city !== "") {
 			queryUrl = `${queryUrl}&city=${city}`;
 		}
-	
+
 		console.log("Query URL:", queryUrl);
-		
+
 		if (county === "") {
 			setError("Please select a county...");
 		} else {
 			setLoading(true);
 			try {
 				const response = await fetch(queryUrl);
-	
+
 				// Handle 404 errors
 				if (response.status === 404) {
 					setError("No accident data found for the specified query.");
-					setStatistics(null);  // Clear previous statistics
+					setStatistics(null); // Clear previous statistics
 					return;
 				}
-	
+
 				if (!response.ok) {
 					throw new Error(`Error: ${response.statusText}`);
 				}
-	
+
 				const data: CrashStatistics = await response.json();
 				setStatistics(data); // Set statistics with the retrieved data
 			} catch (err) {
@@ -395,7 +395,6 @@ const StatisticsPage = () => {
 			}
 		}
 	};
-	
 
 	return (
 		<div>
@@ -613,7 +612,7 @@ const StatisticsPage = () => {
 			<div className="flex flex-col gap-5">
 				<h2>Results:</h2>
 				{loading && <p>Loading...</p>}
-    			{error && <p style={{ color: "red" }}>{error}</p>}									
+				{error && <p style={{ color: "red" }}>{error}</p>}
 
 				{statistics ? (
 					<ul>
@@ -626,10 +625,9 @@ const StatisticsPage = () => {
 						<li>Truck Accidents: {statistics.truck_accidents}</li>
 						<li>Alcohol-Related Accidents: {statistics.alcohol_related}</li>
 					</ul>
-            ) : (
-                !loading && <p>No statistics available for the specified query.</p>
-            )}
-	
+				) : (
+					!loading && <p>No statistics available for the specified query.</p>
+				)}
 			</div>
 		</div>
 	);

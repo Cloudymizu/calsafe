@@ -16,7 +16,6 @@ L.Icon.Default.mergeOptions({
 });
 
 const AccidentMap: React.FC = () => {
-
 	interface Location {
 		location_id: number;
 		primary_rd: string | null;
@@ -81,7 +80,7 @@ const AccidentMap: React.FC = () => {
 
 	useEffect(() => {
 		fetch(
-			`${API_BASE_URL}/api/accidents/?start_date=2021-11-01&end_date=2021-12-31&county=Orange`
+			`${API_BASE_URL}/api/accidents/?start_date=2021-11-01&end_date=2021-12-31&county=Orange`,
 		)
 			.then((response) => response.json())
 			.then((data: Accident[]) => {
