@@ -36,8 +36,11 @@ export const Header = () => {
 
 			<NavigationMenu className="mx-auto my-3 w-fit rounded-md border-2">
 				<NavigationMenuList className="flex justify-between">
-					<NavLink href="/map">
+					<NavLink href="/">
 						<span className="text-2xl">Map</span>
+					</NavLink>
+					<NavLink href="/map">
+						<span className="text-2xl">Query</span>
 					</NavLink>
 					<NavLink href="/statistics">
 						<span className="text-2xl">Statistical Analysis</span>

@@ -8,8 +8,10 @@ import { InfoCard } from "./(components)/info-card";
 import { useState } from "react";
 
 import locations from "./locations.json";
+import dynamic from "next/dynamic";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const Map = dynamic(() => import("../components/Map"), { ssr: false });
 
 export default function Page() {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -127,7 +129,7 @@ export default function Page() {
 				</aside>
 
 				<div className="flex grow flex-col space-y-1">
-					<div className="h-full grow rounded-sm border-2">map goes here</div>
+					<div className="h-full grow rounded-sm border-2"> <Map /> </div>
 					<div className="flex h-fit shrink space-x-2">
 						<div className="flex flex-col space-y-1">
 							<DateSelector

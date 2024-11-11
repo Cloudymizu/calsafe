@@ -107,7 +107,7 @@ const AccidentMap: React.FC = () => {
 		<MapContainer
 			center={[34.055, -118.24]}
 			zoom={10}
-			style={{ height: "100vh", width: "100%" }}
+			style={{ height: "75vh", width: "100%" }}
 		>
 			<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 			{accidents.map((accident, index) => (
