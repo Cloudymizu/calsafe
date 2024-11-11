@@ -8,7 +8,17 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-export const ConditionsSelector = () => {
+interface Conditions {
+	weather: string;
+	lighting: string;
+	collisionType: string;
+}
+
+interface ConditionsSelectorProps {
+	conditions: Conditions;
+	setConditions: (conditions: Conditions) => void;
+}
+export const ConditionsSelector = (props: ConditionsSelectorProps) => {
 	return (
 		<>
 			<Card>
@@ -18,11 +28,17 @@ export const ConditionsSelector = () => {
 				<CardContent>
 					<div className="flex flex-col gap-2">
 						<Label>Weather</Label>
-						<Select>
+						<Select
+							value={props.conditions.weather}
+							onValueChange={(val) =>
+								props.setConditions({ ...props.conditions, weather: val })
+							}
+						>
 							<SelectTrigger className="w-[180px]">
-								<SelectValue placeholder="Clear" />
+								<SelectValue placeholder="All" />
 							</SelectTrigger>
 							<SelectContent>
+								<SelectItem value="all">All</SelectItem>
 								<SelectItem value="clear">Clear</SelectItem>
 								<SelectItem value="cloudy">Cloudy</SelectItem>
 								<SelectItem value="raining">Raining</SelectItem>
@@ -34,11 +50,17 @@ export const ConditionsSelector = () => {
 						</Select>
 
 						<Label>Lighting</Label>
-						<Select>
+						<Select
+							value={props.conditions.lighting}
+							onValueChange={(val) =>
+								props.setConditions({ ...props.conditions, lighting: val })
+							}
+						>
 							<SelectTrigger className="w-[180px]">
-								<SelectValue placeholder="Daylight" />
+								<SelectValue placeholder="All" />
 							</SelectTrigger>
 							<SelectContent>
+								<SelectItem value="all">All</SelectItem>
 								<SelectItem value="daylight">Daylight</SelectItem>
 								<SelectItem value="dusk_dawn">Dusk/Dawn</SelectItem>
 								<SelectItem value="dark">Dark (w/o Street Lights)</SelectItem>
@@ -52,11 +74,17 @@ export const ConditionsSelector = () => {
 						</Select>
 
 						<Label>Collision Type</Label>
-						<Select>
+						<Select
+							value={props.conditions.collisionType}
+							onValueChange={(val) =>
+								props.setConditions({ ...props.conditions, collisionType: val })
+							}
+						>
 							<SelectTrigger className="w-[180px]">
-								<SelectValue placeholder="Head-On" />
+								<SelectValue placeholder="All" />
 							</SelectTrigger>
 							<SelectContent>
+								<SelectItem value="all">All</SelectItem>
 								<SelectItem value="head-on">Head-On</SelectItem>
 								<SelectItem value="sideswipe">Sideswipe</SelectItem>
 								<SelectItem value="rear-end">Rear-end</SelectItem>

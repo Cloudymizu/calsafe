@@ -22,6 +22,8 @@ interface Filters {
 interface FilterColProps {
 	filters: Filters;
 	setFilters: (filters: Filters) => void;
+	updateFilters: () => void;
+	clearFilters: () => void;
 }
 export const FilterCol = (props: FilterColProps) => {
 	return (
@@ -117,8 +119,10 @@ export const FilterCol = (props: FilterColProps) => {
 				</CardContent>
 
 				<CardFooter className="flex flex-row justify-end gap-2 border-t-2 p-2">
-					<Button variant="destructive">Clear</Button>
-					<Button>Update</Button>
+					<Button variant="destructive" onClick={props.updateFilters}>
+						Clear
+					</Button>
+					<Button onClick={props.clearFilters}>Update</Button>
 				</CardFooter>
 			</Card>
 		</>
