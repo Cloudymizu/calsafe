@@ -39,7 +39,7 @@ export const Header = () => {
 					<NavLink href="/">
 						<span className="text-2xl">Map</span>
 					</NavLink>
-					<NavLink href="/map">
+					<NavLink href="/query">
 						<span className="text-2xl">Query</span>
 					</NavLink>
 					<NavLink href="/statistics">

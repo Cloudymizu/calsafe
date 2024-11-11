@@ -410,7 +410,7 @@ const generateDays = () => {
 	return days;
 };
 
-const MapPage = () => {
+const QueryPage = () => {
 	// State for Switches
 	const [isAlcoholToggled, setAlcoholIsToggled] = useState(false);
 	const [isMotorcycleToggled, setMotorcycleIsToggled] = useState(false);
@@ -1138,4 +1138,4 @@ const MapPage = () => {
 	);
 };
 
-export default MapPage;
+export default QueryPage;
