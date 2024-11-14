@@ -119,17 +119,25 @@ export default function Page() {
 	return (
 		<>
 			<div className="flex gap-2 px-2">
-				<aside className="w-fit">
+				<aside className="sticky top-10 size-fit">
 					<FilterCol
 						filters={filters}
 						setFilters={setFilters}
 						clearFilters={clearFilters}
 						updateFilters={fetchAccidents}
 					/>
+					<InfoCard
+						num_datapoints={accidents?.length || 0}
+						start_date={new Date()}
+						end_date={new Date()}
+					/>
 				</aside>
 
 				<div className="flex grow flex-col space-y-1">
-					<div className="h-full grow rounded-sm border-2"> <Map /> </div>
+					<div className="h-full grow rounded-sm border-2">
+						{" "}
+						<Map />{" "}
+					</div>
 					<div className="flex h-fit shrink space-x-2">
 						<div className="flex flex-col space-y-1">
 							<DateSelector
@@ -137,11 +145,6 @@ export default function Page() {
 								setStartDate={setStartDate}
 								endDate={end_date}
 								setEndDate={setEndDate}
-							/>
-							<InfoCard
-								num_datapoints={accidents?.length || 0}
-								start_date={new Date()}
-								end_date={new Date()}
 							/>
 						</div>
 						<AreaSelector
