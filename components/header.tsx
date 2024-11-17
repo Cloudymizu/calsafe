@@ -43,19 +43,16 @@ export const Header = () => {
 						<span className="text-2xl">Query</span>
 					</NavLink>
 					<NavLink href="/statistics">
-						<span className="text-2xl">Statistical Analysis</span>
+						<span className="text-2xl">Statistics</span>
 					</NavLink>
-					<NavLink href="">
+					<NavLink href="/predictions">
 						<span className="text-2xl">Prediction</span>
 					</NavLink>
-					<NavLink href="">
+					<NavLink href="/summary">
 						<span className="text-2xl">Summary</span>
 					</NavLink>
-					<NavLink href="">
+					<NavLink href="/graphs">
 						<span className="text-2xl">Graphs</span>
-					</NavLink>
-					<NavLink href="">
-						<span className="text-2xl">Tools</span>
 					</NavLink>
 				</NavigationMenuList>
 			</NavigationMenu>
