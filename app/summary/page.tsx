@@ -23,7 +23,7 @@ const SummaryPage = () => {
     const [summaryData, setSummaryData] = useState<YearlyData[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-	let queryUrl = `${API_BASE_URL}/api/summary/`;
+	const queryUrl = `${API_BASE_URL}/api/summary/`;
 
     useEffect(() => {
         const fetchData = async () => {
