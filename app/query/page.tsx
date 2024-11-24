@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { AreaSelector } from "../(components)/area-selector";
 import { FilterCol } from "../(components)/filter-col";
@@ -426,7 +427,7 @@ export default function Page() {
                         <button
                             disabled={currentPage === 1}
                             onClick={() => setCurrentPage((prev) => prev - 1)}
-                            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                            className="px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-50 disabled:bg-gray-500"
                         >
                             Previous
                         </button>
@@ -436,7 +437,7 @@ export default function Page() {
                         <button
                             disabled={currentPage === totalPages}
                             onClick={() => setCurrentPage((prev) => prev + 1)}
-                            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                            className="px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-50 disabled:bg-gray-500"
                         >
                             Next
                         </button>
