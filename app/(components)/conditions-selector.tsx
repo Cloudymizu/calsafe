@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import {
@@ -78,7 +79,7 @@ export const ConditionsSelector = ({ conditions, setConditions }: ConditionsSele
                                 <SelectValue placeholder="All" />
                             </SelectTrigger>
                             <SelectContent className="max-h-60 overflow-y-auto">
-                                {Object.entries(WEATHER_MAP).map(([key, code]) => (
+                                {Object.entries(WEATHER_MAP).map(([key]) => (
                                     <SelectItem key={key} value={key}>
                                         {key === "all" ? "All" : key.charAt(0).toUpperCase() + key.slice(1)}
                                     </SelectItem>
@@ -105,7 +106,7 @@ export const ConditionsSelector = ({ conditions, setConditions }: ConditionsSele
                                 <SelectValue placeholder="All" />
                             </SelectTrigger>
                             <SelectContent className="max-h-60 overflow-y-auto">
-                                {Object.entries(LIGHTING_MAP).map(([key, code]) => (
+                                {Object.entries(LIGHTING_MAP).map(([key]) => (
                                     <SelectItem key={key} value={key}>
                                         {key === "all" ? "All" : key.replace(/-/g, " ")}
                                     </SelectItem>
@@ -132,7 +133,7 @@ export const ConditionsSelector = ({ conditions, setConditions }: ConditionsSele
                                 <SelectValue placeholder="All" />
                             </SelectTrigger>
                             <SelectContent className="max-h-60 overflow-y-auto">
-                                {Object.entries(COLLISION_TYPE_MAP).map(([key, code]) => (
+                                {Object.entries(COLLISION_TYPE_MAP).map(([key]) => (
                                     <SelectItem key={key} value={key}>
                                         {key === "all" ? "All" : key.replace(/-/g, " ").charAt(0).toUpperCase() + key.slice(1)}
                                     </SelectItem>
