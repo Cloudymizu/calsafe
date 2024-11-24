@@ -14,9 +14,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 const Map = dynamic(() => import("../components/Map"), { ssr: false });
 
 export default function Page() {
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [city, setCity] = useState("");
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [county, setCounty] = useState("");
 	const [start_date, setStartDate] = useState(new Date("2018-01-01"));
 	const [end_date, setEndDate] = useState(new Date("2023-12-31"));
@@ -47,7 +45,6 @@ export default function Page() {
 		params.append("start_date", start_date.toISOString().slice(0, 10));
 		params.append("end_date", end_date.toISOString().slice(0, 10));
 
-		// filters
 		if (filters.fatal) {
 			params.append("collision_severity", "1");
 		}
@@ -100,15 +97,31 @@ export default function Page() {
 	};
 
 	const fetchAccidents = async () => {
-		const params = getSearchParams();
-		const url = `${API_BASE_URL}/api/accidents/?${params}`;
+		try {
+			const params = getSearchParams();
+			const url = `${API_BASE_URL}/api/accidents/?${params}`;
 
-		const res = await fetch(url);
-		const data = await res.json();
+			console.log("Fetching accidents with URL:", url);
 
-		setAccidents(data);
+			const res = await fetch(url);
 
-		//return data;
+			if (!res.ok) {
+				console.error("Failed to fetch accidents:", res.statusText);
+				return;
+			}
+
+			const data = await res.json();
+
+			if (!Array.isArray(data)) {
+				console.error("Unexpected response format:", data);
+				return;
+			}
+
+			setAccidents(data); // Update the accidents state
+			console.log("Fetched accidents:", data.length, "records");
+		} catch (error) {
+			console.error("Error fetching accidents:", error);
+		}
 	};
 
 	const setCurrentLocation = (location: CountyAndCity) => {
@@ -128,31 +141,28 @@ export default function Page() {
 					/>
 					<InfoCard
 						num_datapoints={accidents?.length || 0}
-						start_date={new Date()}
-						end_date={new Date()}
+						start_date={start_date} // Fixed
+						end_date={end_date}     // Fixed
 					/>
 				</aside>
 
 				<div className="flex grow flex-col space-y-1">
 					<div className="h-full grow rounded-sm border-2">
-						{" "}
-						<Map />{" "}
+						<Map accidents={accidents} />
 					</div>
 					<div className="flex h-fit shrink space-x-2">
 						<div className="flex flex-col space-y-1">
 							<DateSelector
 								startDate={start_date}
-								setStartDate={setStartDate}
+								setStartDate={(date) => setStartDate(date)}
 								endDate={end_date}
-								setEndDate={setEndDate}
+								setEndDate={(date) => setEndDate(date)}
 							/>
 						</div>
 						<AreaSelector
 							locations={Object.values(locations.counties) as County[]}
 							currentLocation={{ county: county, city: city }}
-							setCurrentLocation={(l) => {
-								setCurrentLocation(l);
-							}}
+							setCurrentLocation={(l) => setCurrentLocation(l)}
 						/>
 						<ConditionsSelector
 							conditions={conditions}

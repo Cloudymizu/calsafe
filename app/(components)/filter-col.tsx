@@ -122,7 +122,7 @@ export const FilterCol = (props: FilterColProps) => {
 					<Button variant="destructive" onClick={props.updateFilters}>
 						Clear
 					</Button>
-					<Button onClick={props.clearFilters}>Update</Button>
+					<Button onClick={() => props.updateFilters()}>Update</Button>
 				</CardFooter>
 			</Card>
 		</>
