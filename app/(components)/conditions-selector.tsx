@@ -18,6 +18,7 @@ interface ConditionsSelectorProps {
 	conditions: Conditions;
 	setConditions: (conditions: Conditions) => void;
 }
+
 export const ConditionsSelector = (props: ConditionsSelectorProps) => {
 	return (
 		<>
@@ -27,6 +28,7 @@ export const ConditionsSelector = (props: ConditionsSelectorProps) => {
 				</CardHeader>
 				<CardContent>
 					<div className="flex flex-col gap-2">
+						{/* Weather Dropdown */}
 						<Label>Weather</Label>
 						<Select
 							value={props.conditions.weather}
@@ -37,7 +39,7 @@ export const ConditionsSelector = (props: ConditionsSelectorProps) => {
 							<SelectTrigger className="w-[180px]">
 								<SelectValue placeholder="All" />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="max-h-60 overflow-y-auto">
 								<SelectItem value="all">All</SelectItem>
 								<SelectItem value="clear">Clear</SelectItem>
 								<SelectItem value="cloudy">Cloudy</SelectItem>
@@ -49,6 +51,7 @@ export const ConditionsSelector = (props: ConditionsSelectorProps) => {
 							</SelectContent>
 						</Select>
 
+						{/* Lighting Dropdown */}
 						<Label>Lighting</Label>
 						<Select
 							value={props.conditions.lighting}
@@ -59,7 +62,7 @@ export const ConditionsSelector = (props: ConditionsSelectorProps) => {
 							<SelectTrigger className="w-[180px]">
 								<SelectValue placeholder="All" />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="max-h-60 overflow-y-auto">
 								<SelectItem value="all">All</SelectItem>
 								<SelectItem value="daylight">Daylight</SelectItem>
 								<SelectItem value="dusk_dawn">Dusk/Dawn</SelectItem>
@@ -73,6 +76,7 @@ export const ConditionsSelector = (props: ConditionsSelectorProps) => {
 							</SelectContent>
 						</Select>
 
+						{/* Collision Type Dropdown */}
 						<Label>Collision Type</Label>
 						<Select
 							value={props.conditions.collisionType}
@@ -83,7 +87,7 @@ export const ConditionsSelector = (props: ConditionsSelectorProps) => {
 							<SelectTrigger className="w-[180px]">
 								<SelectValue placeholder="All" />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="max-h-60 overflow-y-auto">
 								<SelectItem value="all">All</SelectItem>
 								<SelectItem value="head-on">Head-On</SelectItem>
 								<SelectItem value="sideswipe">Sideswipe</SelectItem>
@@ -103,3 +107,4 @@ export const ConditionsSelector = (props: ConditionsSelectorProps) => {
 		</>
 	);
 };
+
