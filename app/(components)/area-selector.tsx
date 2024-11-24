@@ -33,13 +33,14 @@ export const AreaSelector = (props: AreaSelectorProps) => {
 						<SelectTrigger id="county-select">
 							<SelectValue placeholder="Select a county" />
 						</SelectTrigger>
-						<SelectContent>
-							{props.locations.map((location) => (
-								<SelectItem key={nanoid()} value={location.name}>
-									{location.name}
-								</SelectItem>
-							))}
+						<SelectContent className="max-h-60 overflow-y-auto">
+    						{props.locations.map((location) => (
+        						<SelectItem key={nanoid()} value={location.name}>
+            						{location.name}
+        						</SelectItem>
+    						))}
 						</SelectContent>
+
 					</Select>
 
 					<Label htmlFor="city-select">City</Label>
