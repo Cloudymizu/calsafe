@@ -142,7 +142,7 @@ export default function Page() {
 					<InfoCard
 						num_datapoints={accidents?.length || 0}
 						start_date={start_date} // Fixed
-						end_date={end_date}     // Fixed
+						end_date={end_date} // Fixed
 					/>
 				</aside>
 

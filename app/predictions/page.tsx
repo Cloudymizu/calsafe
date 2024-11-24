@@ -2,7 +2,6 @@
 "use client";
 
 const PredictionsPage = () => {
-
 	return (
 		<div>
 			<div className="h-20 items-center justify-center">
