@@ -97,28 +97,28 @@ export default function Page() {
 	};
 
 	const fetchAccidents = async () => {
+		const params = getSearchParams();
+		const url = `${API_BASE_URL}/api/accidents/?${params}`;
+	
+		console.log("Fetching accidents with URL:", url); // Debugging log
+	
 		try {
-			const params = getSearchParams();
-			const url = `${API_BASE_URL}/api/accidents/?${params}`;
-
-			console.log("Fetching accidents with URL:", url);
-
 			const res = await fetch(url);
-
+	
 			if (!res.ok) {
 				console.error("Failed to fetch accidents:", res.statusText);
 				return;
 			}
-
+	
 			const data = await res.json();
-
+	
 			if (!Array.isArray(data)) {
 				console.error("Unexpected response format:", data);
 				return;
 			}
-
-			setAccidents(data); // Update the accidents state
-			console.log("Fetched accidents:", data.length, "records");
+	
+			console.log("Fetched accidents:", data.length, "records"); // Debugging log
+			setAccidents(data);
 		} catch (error) {
 			console.error("Error fetching accidents:", error);
 		}
