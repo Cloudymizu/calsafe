@@ -368,7 +368,20 @@ export default function Page() {
 														<strong>Party Number:</strong> {party.party_number}
 													</p>
 													<p className="mx-1">
-														<strong>Party Type:</strong> {party.party_type}
+														<strong>Party Type:</strong>{" "}
+														{party.party_type === "1" 
+															? "Driver (including Hit and Run)"
+															: party.party_type === "2" 
+																? "Pedestrian"
+																: party.party_type === "3" 
+																	? "Parked Vehicle"
+																	: party.party_type === "4" 
+																		? "Bicyclist"
+																		: party.party_type === "5" 
+																			? "Other"
+																			: party.party_type === "6" 
+																				? "Operator"
+																				: "Unknown"}
 													</p>
 													<p className="mx-1">
 														<strong>At Fault:</strong>{" "}
@@ -395,7 +408,20 @@ export default function Page() {
 													className="mt-3 border-l-4 border-slate-200 pl-3"
 												>
 													<p className="mx-1">
-														<strong>Victim Role:</strong> {victim.victim_role}
+														<strong>Victim Role:</strong>{" "} 
+														{victim.victim_role === "1" 
+															? "Driver"
+															: victim.victim_role === "2" 
+																? "Passenger"
+																: victim.victim_role === "3" 
+																	? "Pedestrian"
+																	: victim.victim_role === "4" 
+																		? "Bicyclist"
+																		: victim.victim_role === "5" 
+																			? "Other (single victim on/in non-motor vehicle; e.g. ridden animal, horse-drawn carriage, train, or building)"
+																			: victim.victim_role === "6" 
+																				? "Non-Injured Party"
+																				: "Unknown"}
 													</p>
 													<p className="mx-1">
 														<strong>Victim Age:</strong> {victim.victim_age}
@@ -405,7 +431,39 @@ export default function Page() {
 													</p>
 													<p className="mx-1">
 														<strong>Degree of Injury:</strong>{" "}
-														{victim.victim_degree_of_injury}
+														{victim.victim_degree_of_injury === "1"
+															? "Killed"
+															: victim.victim_degree_of_injury === "2" 
+																? "Severe Injury"
+																: victim.victim_degree_of_injury === "3" 
+																	? "Other Visible Injury"
+																	: victim.victim_degree_of_injury === "4" 
+																		? "Complaint of Pain"
+																		: victim.victim_degree_of_injury === "5" 
+																			? "Suspected Serious Injury"
+																			: victim.victim_degree_of_injury === "6" 
+																				? "Suspected Minor Injury"
+																				: victim.victim_degree_of_injury === "7" 
+																					? "Possible Injury"
+																					: victim.victim_degree_of_injury === "0" 
+																						? "No Injury"
+																						: "Unknown"}
+													</p>
+													<p className="mx-1">
+														<strong>Victim Seating Position:</strong>{" "}
+														{victim.victim_seating_position === "1"
+															? "Driver"
+															: (["2", "3", "4", "5", "6"].includes(victim.victim_seating_position)) ? "Passenger" 
+																: victim.victim_seating_position === "7" 
+																	? "Station Wagon Rear"
+																	: victim.victim_seating_position === "8" 
+																		? "Rear Occupant of Truck or Van"
+																		: victim.victim_seating_position === "9" 
+																			? "Position Unknown"
+																			: victim.victim_seating_position === "0" 
+																				? "Other Occupants"
+																				: (victim.victim_seating_position >= "A" && victim.victim_seating_position <= "Z") ? "Bus Occupants" 
+																					: "Unknown"}
 													</p>
 												</div>
 											))
