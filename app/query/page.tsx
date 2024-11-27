@@ -37,7 +37,120 @@ export default function Page() {
         weather: "",
         lighting: "",
         collisionType: "",
+		roadSurface: "",
+		roadCondition: "",
     });
+
+	const safetyEquipMap = {
+		A: "None in Vehicle",
+		B: "Unknown",
+		C: "Lap Belt Used",
+		D: "Lap Belt Not Used",
+		E: "Shoulder Harness Used",
+		F: "Shoulder Harness Not Used",
+		G: "Lap/Shoulder Harness Used",
+		H: "Lap/Shoulder Harness Not Used",
+		J: "Passive Restraint Used",
+		K: "Passive Restraint Not Used",
+		L: "Air Bag Deployed",
+		M: "Air Bag Not Deployed",
+		N: "Other",
+		P: "Not Required",
+		Q: "Child Restraint in Vehicle Used",
+		R: "Child Restraint in Vehicle Not Used",
+		S: "Child Restraint in Vehicle, Use Unknown",
+		T: "Child Restraint in Vehicle, Improper Use",
+		U: "No Child Restraint in Vehicle",
+		V: "Driver, Motorcycle Helmet Not Used",
+		W: "Driver, Motorcycle Helmet Used",
+		X: "Passenger, Motorcycle Helmet Not Used",
+		Y: "Passenger, Motorcycle Helmet Used",
+		"": "Not Stated",
+	  }
+
+	  const finanResponsMap = {
+		N: "No Proof of Insurance Obtained",
+		Y: "Yes, Proof of Insurance Obtained",
+		O: "Not Applicable",
+		E: "Called Away Before Obtaining Insurance",
+		"": "Not Stated", 
+	  }
+
+	  const partySobrietyMap = {
+		A: "Had Not Been Drinking",
+		B: "Had Been Drinking, Under Influence",
+		C: "Had Been Drinking, Not Under Influence",
+		D: "Had Been Drinking, Impairment Unknown",
+		G: "Impairment Unknown",
+		H: "Not Applicable",
+	  }
+
+	  const partyDrugPhysicalMap = {
+		E: "Under Drug Influence",
+		F: "Impairment - Physical",
+		G: "Impairment Unknown",
+		H: "Not Applicable",
+		I: "Sleepy/Fatigued",
+		"": "Not Stated", 
+	  }
+
+	  const vehicleTypeMap = {
+		A: "Passenger Car/Station Wagon",
+		B: "Passenger Car with Trailer",
+		C: "Motorcycle/Scooter",
+		D: "Pickup or Panel Truck",
+		E: "Pickup or Panel Truck with Trailer",
+		F: "Truck or Truck Tractor",
+		G: "Truck or Truck Tractor with Trailer",
+		H: "Schoolbus",
+		I: "Other Bus",
+		J: "Emergency Vehicle",
+		K: "Highway Construction Equipment",
+		L: "Bicycle",
+		M: "Other Vehicle",
+		N: "Pedestrian",
+		O: "Moped",
+		"": "Not Stated",
+	  }
+
+	  const inattentionMap = {
+		A: "Cell Phone Handheld (7/1/03)",
+		B: "Cell Phone Handsfree (7/1/03)",
+		C: "Electronic Equipment (1/1/01)",
+		D: "Radio/CD (1/1/01)",
+		E: "Smoking (1/1/01)",
+		F: "Eating (1/1/01)",
+		G: "Children (1/1/01)",
+		H: "Animal (1/1/01)",
+		I: "Personal Hygiene (1/1/01)",
+		J: "Reading (1/1/01)",
+		K: "Other (1/1/01)",
+		P: "Cell Phone (1/1/01, value prior to 7/03 form revision)",
+		"": "Not Stated",
+	  }
+
+	  const movePreAccMap = {
+		A: "Stopped",
+		B: "Proceeding Straight",
+		C: "Ran Off Road",
+		D: "Making Right Turn",
+		E: "Making Left Turn",
+		F: "Making U-Turn",
+		G: "Backing",
+		H: "Slowing/Stopping",
+		I: "Passing Other Vehicle",
+		J: "Changing Lanes",
+		K: "Parking Maneuver",
+		L: "Entering Traffic",
+		M: "Other Unsafe Turning",
+		N: "Crossed Into Opposing Lane",
+		O: "Parked",
+		P: "Merging",
+		Q: "Traveling Wrong Way",
+		R: "Other",
+		S: "Lane Splitting",
+		"": "Not Stated", 
+	  }
 
     const getSearchParams = () => {
         const params = new URLSearchParams();
@@ -64,7 +177,12 @@ export default function Page() {
 		if (conditions.lighting && conditions.lighting !== "all") {
 			params.append("lighting", conditions.lighting);
 		}
-
+		if (conditions.roadSurface && conditions.roadSurface !== "all") {
+			params.append("road_surface", conditions.roadSurface);
+		}
+		if (conditions.roadCondition && conditions.roadCondition !== "all") {
+			params.append("road_cond_1", conditions.roadCondition);
+		}
 
         return params.toString();
     };
@@ -393,6 +511,53 @@ export default function Page() {
 													<p className="mx-1">
 														<strong>Party Sex:</strong> {party.party_sex}
 													</p>
+													<p className="mx-1">
+														<strong>Party Race:</strong> {""}
+														{party.race == "A"
+															? "Asian"
+															: party.race == "B"
+																? "Black"
+																: party.race == "H"
+																	? "Hispanic"
+																	: party.race == "W"
+																		? "White"
+																		: "Other"}
+													</p>
+													<p className="mx-1">
+														<strong>Vehicle Year:</strong> {party.vehicle_year}
+													</p>
+													<p className="mx-1">
+														<strong>Vehicle Make:</strong> {party.vehicle_make}
+													</p>
+													<p className="mx-1">
+														<strong>Vehicle Type:</strong>{" "}
+														{vehicleTypeMap[party.stwd_vehicle_type as keyof typeof vehicleTypeMap] || "Unknown"}
+													</p>
+													<p className="mx-1">
+														<strong>Party Sobriety:</strong>{" "}
+														{partySobrietyMap[party.party_sobriety as keyof typeof partySobrietyMap] || "Unknown"}
+													</p>
+													<p className="mx-1">
+														<strong>Drug/Physical Condition:</strong>{" "}
+														{partyDrugPhysicalMap[party.party_drug_physical as keyof typeof partyDrugPhysicalMap] || "Unknown"}
+													</p>
+													<p className="mx-1">
+														<strong>Safety Equipment:</strong>{" "}
+														{safetyEquipMap[party.party_safety_equip_1 as keyof typeof safetyEquipMap] || "Unknown"}
+													</p>
+													<p className="mx-1">
+														<strong>Financial Responsibility:</strong>{" "}
+														{finanResponsMap[party.finan_respons as keyof typeof finanResponsMap] || "Unknown"}
+													</p>
+													<p className="mx-1">
+														<strong>Inattention Type:</strong>{" "}
+														{inattentionMap[party.inattention as keyof typeof inattentionMap] || "Unknown"}
+													</p>
+													<p className="mx-1">
+														<strong>Movement Preceding Accident:</strong>{" "}
+														{movePreAccMap[party.move_pre_acc as keyof typeof movePreAccMap] || "Unknown"}
+													</p>
+
 												</div>
 											))
 										) : (
@@ -465,6 +630,21 @@ export default function Page() {
 																				: (victim.victim_seating_position >= "A" && victim.victim_seating_position <= "Z") ? "Bus Occupants" 
 																					: "Unknown"}
 													</p>
+													<p className="mx-1">
+														<strong>Safety Equipment:</strong>{" "}
+														{safetyEquipMap[victim.victim_safety_equip_1 as keyof typeof safetyEquipMap] || "Unknown"}
+													</p>
+													<p className="mx-1">
+														<strong>Victim Ejected:</strong>{" "} 
+														{victim.victim_ejected === "0" 
+															? "Not Ejected"
+															: victim.victim_ejected === "1" 
+																? "Fully Ejected"
+																: victim.victim_ejected === "2" 
+																	? "Partially Ejected"
+																	:  "Unknown"}
+													</p>
+		
 												</div>
 											))
 										) : (

@@ -36,6 +36,8 @@ export default function Page() {
 		weather: "",
 		lighting: "",
 		collisionType: "",
+		roadSurface: "",
+		roadCondition: "",
 	});
 
 	const getSearchParams = () => {
@@ -78,6 +80,9 @@ export default function Page() {
 		}
 		if (conditions.lighting && conditions.lighting !== "all") {
 			params.append("lighting", conditions.lighting);
+		}
+		if (conditions.roadSurface && conditions.roadSurface !== "all") {
+			params.append("road_surface", conditions.roadSurface);
 		}
 
 		return params.toString();
