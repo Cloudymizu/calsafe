@@ -159,7 +159,7 @@ export default function Page() {
                             {currentAccidents.map((result, index) => (
                                 <li
                                     key={index}
-                                    className="mb-4 rounded-lg border bg-gray-800 p-4 shadow-md"
+                                    className="mb-4 rounded-lg border bg-gray-200 p-4 shadow-md dark:bg-gray-700"
                                     onClick={() => toggleExpand(index)}
                                     style={{ cursor: "pointer" }}
                                 >
@@ -198,10 +198,10 @@ export default function Page() {
 											<strong>County:</strong> {result.location.county}
 										</p>
 										<p className="mx-1">
-											<strong>Point X:</strong> {result.location.point_x}
+											<strong>Lattitude:</strong> {result.location.point_x}
 										</p>
 										<p className="mx-1">
-											<strong>Point Y:</strong> {result.location.point_y}
+											<strong>Longitude:</strong> {result.location.point_y}
 										</p>
 										<h3 className="mb-3 text-lg">Severity Details</h3>
 										<p className="mx-1">

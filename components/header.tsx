@@ -17,14 +17,6 @@ export const Header = () => {
 
 				<div className="flex flex-col gap-5">
 					<div className="flex gap-3">
-						<NavigationMenu className="mx-auto w-fit">
-							<NavigationMenuList className="flex justify-between">
-								<NavLink href="">Civilian</NavLink>
-								<NavLink href="">Law Enforcement</NavLink>
-								<NavLink href="">Engineer</NavLink>
-							</NavigationMenuList>
-						</NavigationMenu>
-
 						<Button size="icon">
 							<CircleHelp size={36} />
 						</Button>
