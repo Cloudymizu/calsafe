@@ -103,16 +103,6 @@ const StatisticsPage = () => {
                 {loading && (
                     <div className="text-blue-500">
                         <h3>Loading statistics...</h3>
-                        <ul className="list-disc list-inside">
-                            <li>Total Crashes: Loading...</li>
-                            <li>Total Injuries: Loading...</li>
-                            <li>Total Fatalities: Loading...</li>
-                            <li>Pedestrian Accidents: Loading...</li>
-                            <li>Bicycle Accidents: Loading...</li>
-                            <li>Motorcycle Accidents: Loading...</li>
-                            <li>Truck Accidents: Loading...</li>
-                            <li>Alcohol-Related Accidents: Loading...</li>
-                        </ul>
                     </div>
                 )}
                 {error && <p className="text-red-500">{error}</p>}
@@ -150,6 +140,58 @@ const StatisticsPage = () => {
                         <div className="block w-96 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
                             <h3 className="font-semibold">Alcohol-Related Accidents</h3>
                             <p>{statistics.alcohol_related}</p>
+                        </div>
+                        <div className="block w-96 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Hit and Run Accidents</h3>
+                            <p>{statistics.hit_and_run}</p>
+                        </div>
+                        <div className="block w-96 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Head On Accidents</h3>
+                            <p>{statistics.head_on}</p>
+                        </div>
+                        <div className="block w-96 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Sideswipe Accidents</h3>
+                            <p>{statistics.sideswipe}</p>
+                        </div>
+                        <div className="block w-96 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Rear End Accidents</h3>
+                            <p>{statistics.rear_end}</p>
+                        </div>
+                        <div className="block w-96 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Object Hit Accidents</h3>
+                            <p>{statistics.hit_object}</p>
+                        </div>
+                        <div className="block w-96 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Roll-over Accidents</h3>
+                            <p>{statistics.roll_over}</p>
+                        </div>
+                        <div className="block w-96 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">City with Most Accidents</h3>
+                            <p>{statistics.most_accidents_city.city}</p>
+                            <p>Accident Count: {statistics.most_accidents_city.accident_count}</p>
+                        </div>
+                        <div className="block w-96 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Intersection with Most Accidents</h3>
+                            <p>Primary Road: {statistics.most_common_road_pair.primary_rd}</p>
+                            <p>Secondary Road: {statistics.most_common_road_pair.secondary_rd}</p>
+                            <p>Accidents: {statistics.most_common_road_pair.count}</p>
+                        </div>
+                        <div className="block w-96 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Road with Most Accidents</h3>
+                            <p>{statistics.most_common_primary_road.primary_rd}</p>
+                            <p>Accidents: {statistics.most_common_primary_road.count}</p>
+                        </div>
+                        <div className="block w-96 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Most Common Day for Accidents</h3>
+                            <p>Day: {statistics.most_common_day.day == "1" ? "Sunday"
+                                        : statistics.most_common_day.day == "2" ? "Monday"
+                                        : statistics.most_common_day.day == "3" ? "Tuesday"
+                                        : statistics.most_common_day.day == "4" ? "Wednesday"
+                                        : statistics.most_common_day.day == "5" ? "Thursday"
+                                        : statistics.most_common_day.day == "6" ? "Friday"
+                                        : statistics.most_common_day.day == "7" ? "Saturday"
+                                        : "Unknown" }</p>
+                            <p>Count: {statistics.most_common_day.count}</p>
                         </div>
                     </div>
 					 )}
