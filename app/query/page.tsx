@@ -6,6 +6,7 @@ import { FilterCol } from "../(components)/filter-col";
 import { DateSelector } from "../(components)/date-selector";
 import { ConditionsSelector } from "../(components)/conditions-selector";
 import { InfoCard } from "../(components)/info-card";
+import { AccidentsByYear } from "../(components)/charts/AccidentsByYear";
 
 import locations from "../locations.json";
 
@@ -20,7 +21,9 @@ export default function Page() {
     const [accidents, setAccidents] = useState<Accident[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [expanded, setExpanded] = useState<number | null>(null);
-    const accidentsPerPage = 50;
+    const accidentsPerPage = 30;
+    const [loadingAccidents, setLoadingAccidents] = useState(false);
+    const [accidentsError, setAccidentsError] = useState("");
 
     const [filters, setFilters] = useState({
         alcohol: false,
@@ -152,6 +155,118 @@ export default function Page() {
 		"": "Not Stated", 
 	  }
 
+
+	//Info and function for graph data
+	interface YearlyData {
+		year: number;
+		data: {
+			total_crashes: number;
+			total_injuries: number | null;
+			pedestrian_accidents: number;
+			bicycle_accidents: number;
+			motorcycle_accidents: number;
+			truck_accidents: number;
+			alcohol_related: number;
+		};
+	}
+
+	const southernCaliforniaCounties = [
+		"San Luis Obispo",
+		"Kern",
+		"San Bernardino",
+		"Ventura",
+		"Los Angeles",
+		"Orange",
+		"Riverside",
+		"San Diego",
+		"Imperial",
+	];
+
+	const [countyByYearData, setCountyByYearData] = useState<YearlyData[]>([]);
+    const [loadingCountyByYear, setCountyByYearLoading] = useState(false);
+    const [countyByYearError, setCountyByYearError] = useState("");
+
+
+	const countySubmit = async () => {
+		setCountyByYearData([]);
+
+		// Construct the base query URL
+		let queryUrl = `${API_BASE_URL}/api/summaryByCounty/?county=${county}`;
+		console.log("Query URL:", queryUrl);
+		setCountyByYearLoading(true);
+		setCountyByYearError("");
+		if (county === "") {
+			queryUrl = `${API_BASE_URL}/api/summary/`;
+		}
+		try {
+			const response = await fetch(queryUrl);
+
+			// Handle 404 errors
+			
+
+			if (!response.ok) {
+				if (response.status === 404) {
+					setCountyByYearError("No Available Data")
+					setCountyByYearData([]);
+					return;
+				}else{
+				setCountyByYearError(`Error: ${response.statusText}`)
+				setCountyByYearData([]);
+			}
+				throw new Error(`Error: ${response.statusText}`);
+			}
+
+			const data = await response.json();
+			setCountyByYearData(data);
+		} catch (err) {
+			setCountyByYearError("An error occurred while fetching the data.")
+			console.error("Fetch error:", err);
+		}finally{
+			setCountyByYearLoading(false);
+		}
+	};
+
+
+	//Info and function for Statistics Page
+    const [statistics, setStatistics] = useState<any | null>(null);
+    const [loadingStatistics, setStatisticsLoading] = useState(false);
+    const [statisticsError, setStatisticsError] = useState("");
+
+
+	const fetchStatistics = async () => {
+        if (!county) {
+			setStatisticsError("Please select a county...")
+            return;
+        }
+		setStatisticsError("");
+		setStatisticsLoading(true);
+        const queryUrl = `${API_BASE_URL}/api/statistics/?start_date=${start_date.toISOString().slice(0, 10)}&end_date=${end_date.toISOString().slice(0, 10)}&county=${county}${city ? `&city=${city}` : ""}`;
+
+        console.log("Fetching statistics with URL:", queryUrl);
+
+        try {
+            const response = await fetch(queryUrl);
+
+            if (!response.ok) {
+				if (response.status === 404) {
+                    setStatisticsError("No accident data found for the specified query.");
+                } else {
+                    setStatisticsError(`Error: ${response.statusText}`);
+                }
+                setStatistics(null);
+                return;
+            }
+
+            const data = await response.json();
+            setStatistics(data);
+        } catch (err) {
+			setStatisticsError("An error occurred while fetching the data.");
+            console.error("Fetch error:", err);
+        }finally{
+			setStatisticsLoading(false)
+		}
+    };
+
     const getSearchParams = () => {
         const params = new URLSearchParams();
         params.append("city", city);
@@ -187,18 +302,33 @@ export default function Page() {
         return params.toString();
     };
 
+	//When update is clicked, this function is used
+	const runAllQueries = async () => {
+		await fetchAccidents();
+		await countySubmit();
+		await fetchStatistics();
+	}
+
     const fetchAccidents = async () => {
         const params = getSearchParams();
         const url = `${API_BASE_URL}/api/accidents/?${params}`;
-        try {
+        setAccidentsError("")
+		setLoadingAccidents(true)
+		try {
             const res = await fetch(url);
             if (!res.ok) {
+				if (res.status === 404) {
+                    setAccidentsError("No accident data found for the specified query.");
+                } else {
+                    setAccidentsError(`Error: ${res.statusText}`);
+                }
                 console.error("Failed to fetch accidents:", res.statusText);
                 return;
             }
 
             const data = await res.json();
             if (!Array.isArray(data)) {
+				setAccidentsError("Undexpected Format")
                 console.error("Unexpected response format:", data);
                 return;
             }
@@ -208,6 +338,9 @@ export default function Page() {
         } catch (error) {
             console.error("Error fetching accidents:", error);
         }
+		finally{
+			setLoadingAccidents(false);
+		}
     };
 
     const toggleExpand = (index: number) => {
@@ -221,7 +354,7 @@ export default function Page() {
     const totalPages = Math.ceil(accidents.length / accidentsPerPage);
 
     return (
-        <div className="flex gap-2 px-2">
+        <div className="flex  gap-2 px-2">
             <aside className="sticky top-10 size-fit">
                 <FilterCol
                     filters={filters}
@@ -237,10 +370,11 @@ export default function Page() {
                             truckAccident: false,
                             stateHighway: false,
                         });
-                        fetchAccidents();
+                        runAllQueries();
                     }}
-                    updateFilters={fetchAccidents}
-                />
+                    updateFilters={runAllQueries}
+					
+                />		
                 <InfoCard
                     num_datapoints={accidents.length}
                     start_date={start_date}
@@ -272,6 +406,13 @@ export default function Page() {
 
                 <div className="flex flex-col gap-5">
                     <h2>Results:</h2>
+					{loadingAccidents && (
+                    <div className="text-blue-500">
+                        <h3>Loading accidents...</h3>
+                    </div>
+                )}
+                {accidentsError && <p className="text-red-500">{accidentsError}</p>}
+
                     {currentAccidents.length > 0 ? (
                         <ul className="list-none">
                             {currentAccidents.map((result, index) => (
@@ -682,7 +823,206 @@ export default function Page() {
                     </div>
                 </div>
             </div>
+
+			<div className="container mx-auto">
+			<div className="container mx-auto">
+			{loadingCountyByYear && (
+                    <div className="text-blue-500">
+                        <h3>Loading Graphs...</h3>
+                    </div>
+                )}
+                {countyByYearError && <p className="text-red-500">{statisticsError}</p>}
+
+			<br />
+			<header className="text-center mb-6">
+                <h1 className="text-3xl font-semibold">Calsafe Graphs</h1>
+				<p className="text-gray-500">Accidents By Year</p>
+				<p className="text-gray-500">{county}</p>
+            </header>
+			
+			<div className="columns-2">
+				<div>
+					<h1 className="mb2 flex justify-center text-2xl font-bold">
+						Total Accidents
+					</h1>
+					{countyByYearData.length > 0 ? (
+						<AccidentsByYear
+							data={countyByYearData.map((data) => {
+								return { year: data.year, total: data.data.total_crashes };
+							})}
+						></AccidentsByYear>
+					) : (
+						<p className="flex justify-center">No statistics available for the specified query.</p>
+					)}
+				</div>
+				<div>
+					<h1 className="mb2 flex justify-center text-2xl font-bold">
+						Motorcycle Accidents
+					</h1>
+
+					{countyByYearData.length > 0 ? (
+						<AccidentsByYear
+							data={countyByYearData.map((data) => {
+								return {
+									year: data.year,
+									total: data.data.motorcycle_accidents,
+								};
+							})}
+						></AccidentsByYear>
+					) : (
+						<p  className="flex justify-center">No statistics available for the specified query.</p>
+					)}
+				</div>
+
+				<div>
+					<h1 className="mb2 flex justify-center text-2xl font-bold">
+						Traffic Injuries
+					</h1>
+					{countyByYearData.length > 0 ? (
+						<AccidentsByYear
+							data={countyByYearData.map((data) => {
+								return { year: data.year, total: data.data.total_injuries };
+							})}
+						></AccidentsByYear>
+					) : (
+						<p  className="flex justify-center">No statistics available for the specified query.</p>
+					)}
+				</div>
+				<div>
+					<h1 className="mb2 flex justify-center text-2xl font-bold">
+						Pedestrians Involved
+					</h1>
+
+					{countyByYearData.length > 0 ? (
+						<AccidentsByYear
+							data={countyByYearData.map((data) => {
+								return {
+									year: data.year,
+									total: data.data.pedestrian_accidents,
+								};
+							})}
+						></AccidentsByYear>
+					) : (
+						<p  className="flex justify-center">No statistics available for the specified query.</p>
+					)}
+				</div>
+			</div>
+		</div>
+
+		<div className="p-6">
+            <header className="text-center mb-6">
+                <h1 className="text-3xl font-semibold">Calsafe Statistics</h1>
+				<p className="text-gray-500">{city} {county}</p>
+				<p className="text-gray-500">{start_date.toISOString().slice(0, 10)} to {end_date.toISOString().slice(0, 10)}</p>
+            </header>
+
+
+            {/* Loading, Error, and Results */}
+            <div className="mt-6">
+				{loadingStatistics && (
+                    <div className="text-blue-500">
+                        <h3>Loading statistics...</h3>
+                    </div>
+                )}
+                {statisticsError && <p className="text-red-500">{statisticsError}</p>}
+
+                {statistics && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Total Crashes</h3>
+                            <p>{statistics.total_crashes}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Total Injuries</h3>
+                            <p>{statistics.total_injuries}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Total Fatalities</h3>
+                            <p>{statistics.total_fatalities}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Pedestrian Accidents</h3>
+                            <p>{statistics.pedestrian_accidents}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Bicycle Accidents</h3>
+                            <p>{statistics.bicycle_accidents}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Motorcycle Accidents</h3>
+                            <p>{statistics.motorcycle_accidents}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Truck Accidents</h3>
+                            <p>{statistics.truck_accidents}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Alcohol-Related Accidents</h3>
+                            <p>{statistics.alcohol_related}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Hit and Run Accidents</h3>
+                            <p>{statistics.hit_and_run}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Head On Accidents</h3>
+                            <p>{statistics.head_on}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Sideswipe Accidents</h3>
+                            <p>{statistics.sideswipe}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Rear End Accidents</h3>
+                            <p>{statistics.rear_end}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Object Hit Accidents</h3>
+                            <p>{statistics.hit_object}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Roll-over Accidents</h3>
+                            <p>{statistics.roll_over}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">City with Most Accidents</h3>
+                            <p>{statistics.most_accidents_city.city}</p>
+                            <p>Accident Count: {statistics.most_accidents_city.accident_count}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Intersection with Most Accidents</h3>
+                            <p>Primary Road: {statistics.most_common_road_pair.primary_rd}</p>
+                            <p>Secondary Road: {statistics.most_common_road_pair.secondary_rd}</p>
+                            <p>Accidents: {statistics.most_common_road_pair.count}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Road with Most Accidents</h3>
+                            <p>{statistics.most_common_primary_road.primary_rd}</p>
+                            <p>Accidents: {statistics.most_common_primary_road.count}</p>
+                        </div>
+                        <div className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500">
+                            <h3 className="font-semibold">Most Common Day for Accidents</h3>
+                            <p>Day: {statistics.most_common_day.day == "1" ? "Sunday"
+                                        : statistics.most_common_day.day == "2" ? "Monday"
+                                        : statistics.most_common_day.day == "3" ? "Tuesday"
+                                        : statistics.most_common_day.day == "4" ? "Wednesday"
+                                        : statistics.most_common_day.day == "5" ? "Thursday"
+                                        : statistics.most_common_day.day == "6" ? "Friday"
+                                        : statistics.most_common_day.day == "7" ? "Saturday"
+                                        : "Unknown" }</p>
+                            <p>Count: {statistics.most_common_day.count}</p>
+                        </div>
+                    </div>
+					 )}
+            </div>
         </div>
+
+
+		
+		</div>
+        </div>
+
+		
     );
 }
 
