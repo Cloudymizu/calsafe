@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -169,18 +170,6 @@ export default function Page() {
 			alcohol_related: number;
 		};
 	}
-
-	const southernCaliforniaCounties = [
-		"San Luis Obispo",
-		"Kern",
-		"San Bernardino",
-		"Ventura",
-		"Los Angeles",
-		"Orange",
-		"Riverside",
-		"San Diego",
-		"Imperial",
-	];
 
 	const [countyByYearData, setCountyByYearData] = useState<YearlyData[]>([]);
     const [loadingCountyByYear, setCountyByYearLoading] = useState(false);
