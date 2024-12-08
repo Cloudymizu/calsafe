@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "react-leaflet-markercluster/dist/styles.min.css";
@@ -82,8 +82,15 @@ interface Accident {
 	parties: Party[];
 }
 
+interface Predictions{
+	lat: number | null;
+	lon: number | null;
+	rad: number | null;
+}
+
 interface MapProps {
 	accidents?: Accident[]; // Pass accidents as a prop
+	predictions?: Predictions[];
 }
 
 const victimDegreeMap: { [key: string]: string } = {
@@ -210,7 +217,7 @@ const safetyEquipMap: { [key: string]: string } = {
     "": "Not Stated",
   }
 
-const Map: React.FC<MapProps> = ({ accidents }) => {
+const Map: React.FC<MapProps> = ({ accidents, predictions }) => {
 	const defaultCenter: [number, number] = [34.055, -118.24];
 	const defaultZoom = 10;
 
@@ -524,10 +531,27 @@ const Map: React.FC<MapProps> = ({ accidents }) => {
 											)}
 										</div>
 									</Popup>
+									
 								</Marker>
+								
 							);
 						})}
 			</MarkerClusterGroup>
+
+			<MarkerClusterGroup {...(undefined as any)}>
+			{predictions && predictions.map((prediction) =>{
+				const {lat, lon, rad} = prediction;
+				return(
+					<Circle  center={[lat as number, lon as number]} radius={rad as number}
+					color="#ff0000">
+					</Circle>
+				)
+
+			})}
+			
+			</MarkerClusterGroup>
+
+
 		</MapContainer>
 	);
 };

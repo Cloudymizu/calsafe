@@ -18,6 +18,7 @@ interface Filters {
 	pedestrianAccident: boolean;
 	truckAccident: boolean;
 	stateHighway: boolean;
+	usePredictions: boolean;
 }
 interface FilterColProps {
 	filters: Filters;
@@ -112,6 +113,15 @@ export const FilterCol = (props: FilterColProps) => {
 								checked={props.filters.stateHighway}
 								onCheckedChange={(e) =>
 									props.setFilters({ ...props.filters, stateHighway: e })
+								}
+							></Switch>
+
+							<Label htmlFor="use-predictions-toggle">Use Predictions</Label>
+							<Switch
+								id="use-predictions-toggle"
+								checked={props.filters.usePredictions}
+								onCheckedChange={(e) =>
+									props.setFilters({ ...props.filters, usePredictions: e })
 								}
 							></Switch>
 						</div>

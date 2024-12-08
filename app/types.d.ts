@@ -96,3 +96,9 @@ interface CountyAndCity {
 	county: string;
 	city: string;
 }
+
+interface Predictions{
+	lat: number | null;
+	lon: number | null;
+	rad: number | null;
+}

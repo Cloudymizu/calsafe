@@ -8,6 +8,7 @@ import { InfoCard } from "./(components)/info-card";
 import { useState } from "react";
 
 import locations from "./locations.json";
+import centroidData from "./centroidData.json";
 import dynamic from "next/dynamic";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -20,7 +21,7 @@ export default function Page() {
 	const [end_date, setEndDate] = useState(new Date("2023-12-31"));
 
 	const [accidents, setAccidents] = useState<Accident[] | undefined>();
-
+	const [predictions, setPredictions] = useState<Predictions[] | undefined>();
 	const [filters, setFilters] = useState({
 		alcohol: false,
 		motorcycle: false,
@@ -30,6 +31,7 @@ export default function Page() {
 		pedestrianAccident: false,
 		truckAccident: false,
 		stateHighway: false,
+		usePredictions: false
 	});
 
 	const [conditions, setConditions] = useState({
@@ -39,8 +41,8 @@ export default function Page() {
 		roadSurface: "",
 		roadCondition: "",
 	});
-
 	const getSearchParams = () => {
+		setPredictions(undefined)
 		const params = new URLSearchParams();
 		params.append("city", city);
 		params.append("county", county);
@@ -71,6 +73,9 @@ export default function Page() {
 		if (filters.stateHighway) {
 			params.append("state_hwy_ind", "Y");
 		}
+		if(filters.usePredictions && county != ""){
+			predictCounty(county)
+		}
 
 		if (conditions.weather && conditions.weather !== "all") {
 			params.append("weather_1", conditions.weather);
@@ -88,6 +93,14 @@ export default function Page() {
 		return params.toString();
 	};
 
+	const predictCounty = (county: any) =>{
+		let kind: keyof typeof centroidData = county
+			//Precision hard coded to 4
+			setPredictions(centroidData[kind].Precision[4])
+	}
+
+
+
 	const clearFilters = () => {
 		setFilters({
 			alcohol: false,
@@ -98,6 +111,7 @@ export default function Page() {
 			pedestrianAccident: false,
 			truckAccident: false,
 			stateHighway: false,
+			usePredictions: false
 		});
 	};
 
@@ -153,7 +167,7 @@ export default function Page() {
 
 				<div className="flex grow flex-col space-y-1">
 					<div className="h-full grow rounded-sm border-2">
-						<Map accidents={accidents} />
+						<Map accidents={accidents} predictions={predictions} />
 					</div>
 					<div className="flex h-fit shrink space-x-2">
 						<div className="flex flex-col space-y-1">

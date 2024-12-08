@@ -35,6 +35,7 @@ export default function Page() {
         pedestrianAccident: false,
         truckAccident: false,
         stateHighway: false,
+		usePredictions: false
     });
 
     const [conditions, setConditions] = useState({
@@ -358,6 +359,7 @@ export default function Page() {
                             pedestrianAccident: false,
                             truckAccident: false,
                             stateHighway: false,
+							usePredictions: false
                         });
                         runAllQueries();
                     }}
