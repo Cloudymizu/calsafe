@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { AreaSelector } from "./(components)/area-selector";
@@ -94,7 +95,7 @@ export default function Page() {
 	};
 
 	const predictCounty = (county: any) =>{
-		let kind: keyof typeof centroidData = county
+		const kind: keyof typeof centroidData = county
 			//Precision hard coded to 4
 			setPredictions(centroidData[kind].Precision[4])
 	}

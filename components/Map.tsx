@@ -539,12 +539,15 @@ const Map: React.FC<MapProps> = ({ accidents, predictions }) => {
 			</MarkerClusterGroup>
 
 			<MarkerClusterGroup {...(undefined as any)}>
-			{predictions && predictions.map((prediction) =>{
+			{predictions && predictions.map((prediction, index) =>{
 				const {lat, lon, rad} = prediction;
 				return(
-					<Circle  center={[lat as number, lon as number]} radius={rad as number}
-					color="#ff0000">
-					</Circle>
+					<Circle
+						key={index}
+						center={[lat as number, lon as number]}
+						radius={rad as number}
+						color="#ff0000"
+					/>
 				)
 
 			})}
