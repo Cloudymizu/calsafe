@@ -167,7 +167,7 @@ export default function Page() {
 				</aside>
 
 				<div className="flex grow flex-col space-y-1">
-					<div className="h-full grow rounded-sm border-2">
+					<div className="h-full grow rounded-sm border-2 z-10">
 						<Map accidents={accidents} predictions={predictions} />
 					</div>
 					<div className="flex h-fit shrink space-x-2">
