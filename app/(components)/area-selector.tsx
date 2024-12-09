@@ -27,8 +27,7 @@ export const AreaSelector = (props: AreaSelectorProps) => {
 					<Select
 						value={props.currentLocation.county}
 						onValueChange={(c) =>
-							props.setCurrentLocation({ ...props.currentLocation, county: c, city: "" })
-							
+							props.setCurrentLocation({ ...props.currentLocation, county: c })
 						}
 					>
 						<SelectTrigger id="county-select">
