@@ -27,6 +27,8 @@ const SummaryPage = () => {
 	const [error, setError] = useState("");
 	const queryUrl = `${API_BASE_URL}/api/summary/`;
 
+	const [yearRange, setYearRange] = useState<number[]>([]);
+
 	useEffect(() => {
 		const fetchData = async () => {
 			setLoading(true);
@@ -37,6 +39,12 @@ const SummaryPage = () => {
 				}
 				const data: YearlyData[] = await response.json();
 				setSummaryData(data);
+
+				// Extract min and max year from the data
+				const minYear = Math.min(...data.map((yearData) => yearData.year));
+				const maxYear = Math.max(...data.map((yearData) => yearData.year));
+
+				setYearRange([minYear, maxYear]);
 			} catch (err) {
 				setError("An error occurred while fetching the summary data.");
 				console.error(err);
@@ -53,7 +61,7 @@ const SummaryPage = () => {
 	return (
 		<div className="container mx-auto">
 			<h1 className="mb-4 text-2xl font-bold">
-				Yearly Statewide Accident Summary (2018 - 2023)
+				Yearly Statewide Accident Summary ({yearRange[0]} - {yearRange[1]})
 			</h1>
 			<div className="grid gap-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 				{summaryData.map((yearData) => (
