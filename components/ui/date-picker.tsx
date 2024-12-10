@@ -10,6 +10,25 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { useEffect } from "react";
+import { nanoid } from "nanoid";
+
+// util
+const getAllMonths = () => {
+	return Array.from({ length: 12 }, (_, i) => {
+		const date = new Date(1970, i, 1); // Create a date for the first day of each month
+		return format(date, "MMMM"); // Full month name (e.g., "January")
+	});
+};
 
 interface DatePickerProps {
 	date: Date;
@@ -19,7 +38,7 @@ interface DatePickerProps {
 export function DatePicker({ date, setDate }: DatePickerProps) {
 	const [_date, _setDate] = React.useState<Date>(date);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		// Ensure the default date is within the valid range
 		if (!isDateInRange(date)) {
 			const validDate = validateDate(date);
@@ -28,7 +47,7 @@ export function DatePicker({ date, setDate }: DatePickerProps) {
 		} else {
 			_setDate(date);
 		}
-	}, [date]);
+	}, [date, setDate]);
 
 	const handleDateChange = (type: "month" | "day" | "year", value: number) => {
 		if (_date) {
@@ -78,12 +97,12 @@ export function DatePicker({ date, setDate }: DatePickerProps) {
 					<select
 						value={_date.getMonth()}
 						onChange={(e) =>
-							handleDateChange("month", parseInt(e.target.value, 10))
+							handleDateChange("month", Number.parseInt(e.target.value, 10))
 						}
 						className="w-1/3 rounded border px-3 py-2"
 					>
 						{Array.from({ length: 12 }, (_, index) => (
-							<option key={index} value={index}>
+							<option key={nanoid()} value={index}>
 								{format(new Date(2000, index), "MMMM")}
 							</option>
 						))}
@@ -93,7 +112,7 @@ export function DatePicker({ date, setDate }: DatePickerProps) {
 					<select
 						value={_date.getDate()}
 						onChange={(e) =>
-							handleDateChange("day", parseInt(e.target.value, 10))
+							handleDateChange("day", Number.parseInt(e.target.value, 10))
 						}
 						className="w-1/3 rounded border px-3 py-2"
 					>
@@ -117,7 +136,7 @@ export function DatePicker({ date, setDate }: DatePickerProps) {
 					<select
 						value={_date.getFullYear()}
 						onChange={(e) =>
-							handleDateChange("year", parseInt(e.target.value, 10))
+							handleDateChange("year", Number.parseInt(e.target.value, 10))
 						}
 						className="w-1/3 rounded border px-3 py-2"
 					>
