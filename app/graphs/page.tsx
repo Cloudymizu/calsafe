@@ -108,7 +108,7 @@ const GraphsPage = () => {
 			<br />
 			<div className="columns-2">
 				<div>
-					<h1 className="mb2 flex justify-center text-2xl font-bold">
+					<h1 className="mb-2 flex justify-center text-2xl font-bold">
 						Accidents by Year
 					</h1>
 					{countyByYearData.length > 0 ? (
@@ -122,7 +122,7 @@ const GraphsPage = () => {
 					)}
 				</div>
 				<div>
-					<h1 className="mb2 flex justify-center text-2xl font-bold">
+					<h1 className="mb-2 flex justify-center text-2xl font-bold">
 						Motorcycle Accidents
 					</h1>
 
@@ -141,7 +141,7 @@ const GraphsPage = () => {
 				</div>
 
 				<div>
-					<h1 className="mb2 flex justify-center text-2xl font-bold">
+					<h1 className="mb-2 flex justify-center text-2xl font-bold">
 						Traffic Injuries
 					</h1>
 					{countyByYearData.length > 0 ? (
@@ -155,7 +155,7 @@ const GraphsPage = () => {
 					)}
 				</div>
 				<div>
-					<h1 className="mb2 flex justify-center text-2xl font-bold">
+					<h1 className="mb-2 flex justify-center text-2xl font-bold">
 						Pedestrians Involved
 					</h1>
 

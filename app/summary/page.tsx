@@ -2,6 +2,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { SummaryItem } from "../(components)/summary-item";
+import { nanoid } from "nanoid";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -25,6 +27,8 @@ const SummaryPage = () => {
 	const [error, setError] = useState("");
 	const queryUrl = `${API_BASE_URL}/api/summary/`;
 
+	const [yearRange, setYearRange] = useState<number[]>([]);
+
 	useEffect(() => {
 		const fetchData = async () => {
 			setLoading(true);
@@ -35,6 +39,12 @@ const SummaryPage = () => {
 				}
 				const data: YearlyData[] = await response.json();
 				setSummaryData(data);
+
+				// Extract min and max year from the data
+				const minYear = Math.min(...data.map((yearData) => yearData.year));
+				const maxYear = Math.max(...data.map((yearData) => yearData.year));
+
+				setYearRange([minYear, maxYear]);
 			} catch (err) {
 				setError("An error occurred while fetching the summary data.");
 				console.error(err);
@@ -43,7 +53,7 @@ const SummaryPage = () => {
 			}
 		};
 		fetchData();
-	}, []);
+	}, [queryUrl]);
 
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p style={{ color: "red" }}>{error}</p>;
@@ -51,23 +61,13 @@ const SummaryPage = () => {
 	return (
 		<div className="container mx-auto">
 			<h1 className="mb-4 text-2xl font-bold">
-				Yearly Statewide Accident Summary (2018 - 2023)
+				Yearly Statewide Accident Summary ({yearRange[0]} - {yearRange[1]})
 			</h1>
-			{summaryData.map((yearData) => (
-				<div key={yearData.year} className="mb-8">
-					<h2 className="mb-2 text-xl font-semibold">{yearData.year}</h2>
-					<ul>
-						<li>Total Crashes: {yearData.data.total_crashes}</li>
-						<li>Total Injuries: {yearData.data.total_injuries ?? "N/A"}</li>
-						<li>Total Fatalities: {yearData.data.total_fatalities ?? "N/A"}</li>
-						<li>Pedestrian Accidents: {yearData.data.pedestrian_accidents}</li>
-						<li>Bicycle Accidents: {yearData.data.bicycle_accidents}</li>
-						<li>Motorcycle Accidents: {yearData.data.motorcycle_accidents}</li>
-						<li>Truck Accidents: {yearData.data.truck_accidents}</li>
-						<li>Alcohol-Related Accidents: {yearData.data.alcohol_related}</li>
-					</ul>
-				</div>
-			))}
+			<div className="grid gap-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+				{summaryData.map((yearData) => (
+					<SummaryItem key={nanoid()} yearData={yearData} />
+				))}
+			</div>
 		</div>
 	);
 };
