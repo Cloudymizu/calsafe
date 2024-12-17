@@ -40,12 +40,6 @@ export const Header = () => {
 					<NavLink href="/predictions">
 						<span className="text-2xl">Prediction</span>
 					</NavLink>
-					<NavLink href="/summary">
-						<span className="text-2xl">Summary</span>
-					</NavLink>
-					<NavLink href="/graphs">
-						<span className="text-2xl">Graphs</span>
-					</NavLink>
 				</NavigationMenuList>
 			</NavigationMenu>
 		</header>
