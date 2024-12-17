@@ -45,7 +45,6 @@ const StatisticsPage = () => {
 	// State for selected date range
 	const [startDate, setStartDate] = useState(new Date("2018-01-01"));
 	const [endDate, setEndDate] = useState(new Date("2023-12-31"));
-	const [yearRange, setYearRange] = useState<number[]>([]);
 
 	// State for location (county & city)
 	const [county, setCounty] = useState("");
@@ -57,7 +56,6 @@ const StatisticsPage = () => {
 	const [statistics, setStatistics] = useState<any | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
-	const [loadingGraphs, setGraphsLoading] = useState(false);
 
 	
 	// Fetch statistics from the API
@@ -107,7 +105,6 @@ const StatisticsPage = () => {
 		if (county === "") {
 			queryUrl = `${API_BASE_URL}/api/summary/`;
 		}
-		setGraphsLoading(true);
 		try {
 			const response = await fetch(queryUrl);
 				// Handle 404 errors
@@ -124,8 +121,6 @@ const StatisticsPage = () => {
 		} catch (err) {
 			setError("An error occurred while fetching the data.");
 			console.error("Fetch error:", err);
-		} finally {
-			setGraphsLoading(false);
 		}
 	};
 
@@ -141,11 +136,6 @@ const StatisticsPage = () => {
 			const data: YearlyData[] = await response.json();
 			setSummaryData(data);
 
-			// Extract min and max year from the data
-			const minYear = Math.min(...data.map((yearData) => yearData.year));
-			const maxYear = Math.max(...data.map((yearData) => yearData.year));
-
-			setYearRange([minYear, maxYear]);
 		} catch (err) {
 			setError("An error occurred while fetching the summary data.");
 			console.error(err);
